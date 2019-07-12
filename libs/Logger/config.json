@@ -2,6 +2,6 @@
   "workspaceId": "",
   "sharedKey": "",
   "environment": "",
-  "traceTableName": "DataCopRestAPITrace",
+  "traceTableName": "",
   "apiVersion": "2016-04-01"
 }
