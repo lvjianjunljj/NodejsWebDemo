@@ -1,0 +1,26 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        // this excludes all folders 
+        // named "node_modules" from 
+        // the explore tree
+        "**/node_modules": true,
+        // this excludes all folders
+        // names "obj", "bin" from the explore 
+        // tree.
+        "**/obj": true,
+        "**/bin": true
+    },
+    // The number of spaces a tab is equal to.
+    "editor.tabSize": 2,
+    // When opening a file, `editor.tabSize` and `editor.insertSpaces` will be detected based on the file contents.
+    "editor.detectIndentation": false,
+    // Controls whether the editor should render whitespace characters, makes it easier to fix indentation errors.
+    "editor.renderWhitespace": "all",
+    // Removes the white space added by auto indents.
+    "editor.trimAutoWhitespace": true,
+    // Controls auto save of dirty files. Accepted values:  "off", "afterDelay", "onFocusChange". If set to "afterDelay" you can configure the delay in "files.autoSaveDelay".
+    "files.autoSave": "onFocusChange"
+}

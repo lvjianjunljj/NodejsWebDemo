@@ -1,0 +1,21 @@
+{
+  "name": "datacopservice",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./Service/app.js"
+  },
+  "description": "Data Cop config for ES Lint",
+  "author": {
+    "name": "ayabala",
+    "email": "gbodegasorg@microsoft.com"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.11.1"
+  }
+}

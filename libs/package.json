@@ -1,0 +1,20 @@
+{
+  "name": "datacopservicesharedlib",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Datacop service shared lib",
+  "main": "app.js",
+  "scripts": {
+    "test": "set NODE_ENV=test&& .\\node_modules\\.bin\\mocha --reporter spec --timeout 10000",
+    "testd": "set NODE_ENV=test&& .\\node_modules\\.bin\\mocha --debug-brk --reporter spec --no-timeouts",
+    "lint": "..\\..\\node_modules\\.bin\\eslint **\\*.js"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^2.0.2",
+    "async": "^2.6.1",
+    "azure-kusto-data": "^0.2.3",
+    "crypto": "^1.0.1",
+    "debug": "^4.1.0",
+    "request": "^2.88.0"
+  }
+}

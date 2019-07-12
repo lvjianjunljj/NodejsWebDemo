@@ -1,0 +1,597 @@
+swagger: '2.0'
+info:
+  description: DataCop REST API is to provide various information like alert, score and tests executed information for all datasets monitored by DataCop.
+  version: 1.0.0
+  title: DataCop REST API
+  contact:
+    email: datacopdev@microsoft.com
+host: datacopprodfe.azurewebsites.net
+basePath: /datacop/api/v1
+tags:
+  - name: alerts
+    description: Provides the list of alerts along with metadata that are raised by DataCop
+  - name: dqscores
+    description: Provides the data quality scores calculated by DataCop
+schemes:
+  - https
+  - http
+paths:
+  /alerts:
+    get:
+      tags:
+        - alerts
+      summary: Get the alerts whose status are active or fired from now to cutofftime
+      description: If not define cutofftime in query, the default cutofftime is seven days ago.
+      operationId: getAllAlerts
+      produces:
+        - application/json
+      parameters:
+        - name: cutofftime
+          in: query
+          description: cutoff time stamp
+          required: false
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AlertDetailInfo'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  '/alerts/QoB/dataset/{datasetId}':
+    get:
+      tags:
+        - alerts
+      summary: Get the QoB alerts of a specific dataset
+      description: Get all the QoB alerts for the specific dataset
+      operationId: getAlertsBasedOnDatasetId
+      produces:
+        - application/json
+      parameters:
+        - name: datasetId
+          in: path
+          description: id of dataset
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AlertDatasetInfo'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  '/alerts/QoB/dataset/kusto/{datasetId}':
+    get:
+      tags:
+        - alerts
+      summary: Get the QoB alerts of a specific dataset through Kusto
+      description: Get all the QoB alerts for the specific dataset through Kusto
+      operationId: getAlertsBasedOnDatasetIdByKusto
+      produces:
+        - application/json
+      parameters:
+        - name: datasetId
+          in: path
+          description: id of dataset
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AlertDatasetInfoFromKusto'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  /alerts/stats/active_trend:
+    get:
+      tags:
+        - alerts
+      summary: Get all the QoB active alerts count splited by created month
+      description: Get all the QoB active alerts count splited by created month
+      operationId: getActiveTrend
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AlertActiveTrend'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  /dqscores:
+    get:
+      tags:
+        - dqscores
+      summary: Get all the DataCop data quality scores
+      description: Get all the DataCop data quality scores
+      operationId: getDqScores
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DqScoreDetialInfo'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  '/dqscores/dataset/dependents/{datasetId}':
+    get:
+      tags:
+        - dqscores
+      summary: Get the data quality scores of dependent dataset for last two days
+      description: Get the data quality scores of dependent dataset for last two days
+      operationId: getDependentsDqScores
+      produces:
+        - application/json
+      parameters:
+        - name: datasetId
+          in: path
+          description: ID of dataset
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DqScoreDetialInfo'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  '/dqscores/recent/dataset/dependents/{datasetId}':
+    get:
+      tags:
+        - dqscores
+      summary: Get the latest DataCop data quality score details of dependent dataset
+      description: Get the latest DataCop data quality score details of dependent dataset
+      operationId: getDependentsRecentDqScores
+      produces:
+        - application/json
+      parameters:
+        - name: datasetId
+          in: path
+          description: ID of dataset
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DqScoreRecentInfo'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  '/dqscores/recent/dataset/{datasetId}':
+    get:
+      tags:
+        - dqscores
+      summary: Get the latest DataCop data quality score details of this dataset
+      description: Get the latest DataCop data quality score details of this dataset
+      operationId: getDatasetRecentDqScores
+      produces:
+        - application/json
+      parameters:
+        - name: datasetId
+          in: path
+          description: ID of the dataset
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DqScoreRecentInfo'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  '/dqscores/category/{categoryname}':
+    get:
+      tags:
+        - dqscores
+      summary: Get the DataCop data quality scores with specified category in all datasets for last two days
+      description: Get the DataCop data quality scores with specified category in all datasets for last two days
+      operationId: getCategoryDqScores
+      produces:
+        - application/json
+      parameters:
+        - name: categoryname
+          in: path
+          description: name of category
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DqScoreDetialInfo'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  /dqscores/recent:
+    get:
+      tags:
+        - dqscores
+      summary: Get all the latest DataCop data quality score details
+      description: Get all the latest DataCop data quality score details
+      operationId: getRecentDqScores
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DqScoreRecentInfo'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  '/dqscores/recent/category/{categoryname}':
+    get:
+      tags:
+        - dqscores
+      summary: Get the latest DataCop data quality score details for specified category
+      description: Get the latest DataCop data quality score details for specified category
+      operationId: getCategoryRecentDqScores
+      produces:
+        - application/json
+      parameters:
+        - name: categoryname
+          in: path
+          description: name of category
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DqScoreRecentInfo'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  /swaggerdoc:
+    get:
+      tags:
+        - swaggerdoc
+      summary: Get the swagger for this REST API without auth
+      description: Get the swagger for this REST API without auth
+      operationId: getSwaggerDoc
+      produces:
+        - text/plain
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: string
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+securityDefinitions:
+  Bearer:
+    type: oauth2
+    flow: application
+    tokenUrl: 'https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47/oauth2/token'
+definitions:
+  TestRunResult:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      isSuccess:
+        type: boolean
+      timestamp:
+        type: string
+        format: date-time
+      detail:
+        type: string
+      incidentId:
+        type: integer
+        format: int64
+  DataCopCategoryScoreDetails:
+    type: object
+    properties:
+      score:
+        type: number
+        format: double
+      isSuccess:
+        type: boolean
+      testRunResults:
+        type: array
+        items:
+          $ref: '#/definitions/TestRunResult'
+  AlertDetailInfo:
+    type: object
+    properties:
+      dateTime:
+        type: string
+        format: date-time
+      severity:
+        type: integer
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+      alertType:
+        type: string
+        enum:
+          - None
+          - Business
+          - Data
+      testType:
+        type: string
+        enum:
+          - None
+          - Availability
+          - Latency
+          - Correctness
+          - Completeness
+          - Custom
+      datasetName:
+        type: string
+      incidentId:
+        type: integer
+        format: int64
+      status:
+        type: string
+        enum:
+          - Invalid
+          - Active
+          - Resolved
+          - New
+          - Mitigating
+          - Correlating
+          - Mitigated
+          - Holding
+          - Suppressed
+      alertTitle:
+        type: string
+      titleOverride:
+        type: string
+      icmTeamName:
+        type: string
+      assignedTo:
+        type: string
+      acknowledgeDate:
+        type: string
+        format: date-time
+      mitigateDate:
+        type: string
+        format: date-time
+      resolvedDate:
+        type: string
+        format: date-time
+      impactedDate:
+        type: string
+        format: date-time
+  AlertDatasetInfo:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      title:
+        type: string
+      shortTitle:
+        type: string
+      owner:
+        type: string
+      severity:
+        type: integer
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+      businessOwner:
+        type: string
+      status:
+        type: string
+        enum:
+          - Invalid
+          - Active
+          - Resolved
+          - New
+          - Mitigating
+          - Correlating
+          - Mitigated
+          - Holding
+          - Suppressed
+      alertType:
+        type: string
+        enum:
+          - None
+          - Business
+          - Data
+      createDate:
+        type: string
+        format: date-time
+      acknowledgeDate:
+        type: string
+        format: date-time
+      mitigateDate:
+        type: string
+        format: date-time
+      resolveDate:
+        type: string
+        format: date-time
+      impactStartDate:
+        type: string
+        format: date-time
+  AlertDatasetInfoFromKusto:
+    type: object
+    properties:
+      incidentId:
+        type: integer
+        format: int64
+      title:
+        type: string
+      owningContactAlias:
+        type: string
+      alertStatus:
+        type: string
+        enum:
+          - Invalid
+          - Active
+          - Resolved
+          - New
+          - Mitigating
+          - Correlating
+          - Mitigated
+          - Holding
+          - Suppressed
+      issuedOnDate:
+        type: string
+        format: date-time
+      mitigateDate:
+        type: string
+        format: date-time
+      resolvedDate:
+        type: string
+        format: date-time
+      lastUpdateDate:
+        type: string
+        format: date-time
+      lastUpdate:
+        type: string
+  AlertActiveTrend:
+    type: object
+    properties:
+      timeStamp:
+        type: string
+        format: date-time
+      activeAlertCount:
+        type: integer
+        format: int64
+  DqScoreDetialInfo:
+    type: object
+    properties:
+      datasetId:
+        type: string
+      name:
+        type: string
+      scoreTime:
+        type: string
+        format: date-time
+      score:
+        type: number
+        format: double
+      availabilityScore:
+        type: number
+        format: double
+      latencyScore:
+        type: number
+        format: double
+      completenessScore:
+        type: number
+        format: double
+      correctnessScore:
+        type: number
+        format: double
+  DqScoreRecentInfo:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      dataFabric:
+        type: string
+        enum:
+          - None
+          - ADLS
+          - Cosmos
+          - SQL
+          - Spark
+      scoreTime:
+        type: string
+        format: date-time
+      lastKnownGood:
+        type: string
+        format: date-time
+      score:
+        type: number
+        format: double
+      isSuccess:
+        type: boolean
+      availabilityScore:
+        $ref: '#/definitions/DataCopCategoryScoreDetails'
+      completenessScore:
+        $ref: '#/definitions/DataCopCategoryScoreDetails'
+      correctnessScore:
+        $ref: '#/definitions/DataCopCategoryScoreDetails'
+      latencyScore:
+        $ref: '#/definitions/DataCopCategoryScoreDetails'

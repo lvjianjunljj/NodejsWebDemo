@@ -1,0 +1,15 @@
+{
+    "env": {
+      "node": true
+    },
+    "extends": "airbnb",
+    "rules": {
+      "max-len": "off",
+      "no-undef": "error",
+      "no-unused-vars": ["error", {"args": "none"}],
+      "no-unused-expressions": ["error", { "allowShortCircuit": true }],
+      "consistent-return": ["error", { "treatUndefinedAsUnspecified": true }],
+      "linebreak-style": "off",
+      "eslint linebreak-style":[0, "error", "windows"]
+    }
+  }
